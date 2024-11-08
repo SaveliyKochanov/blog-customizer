@@ -42,7 +42,6 @@ const App = () => {
 		</main>
 	);
 };
-
 root.render(
 	<StrictMode>
 		<App />
