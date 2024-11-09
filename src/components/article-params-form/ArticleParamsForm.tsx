@@ -1,4 +1,4 @@
-import { SyntheticEvent, useRef, useState } from 'react';
+import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import {
 	backgroundColors,
 	contentWidthArr,
@@ -43,7 +43,8 @@ export const ArticleParamsForm = ({
 	);
 
 	const [isAsideOpen, setAsideOpen] = useState(false);
-	const asideRef = useRef(null);
+	const asideRef = useRef<HTMLElement>(null);
+
 	const handleArrowClick = () => {
 		setAsideOpen(!isAsideOpen);
 	};
@@ -73,6 +74,23 @@ export const ArticleParamsForm = ({
 			contentWidth: defaultArticleState.contentWidth.value,
 		});
 	}
+
+	const handleClickOutside = (event: MouseEvent) => {
+		if (asideRef.current && !asideRef.current.contains(event.target as Node)) {
+			setAsideOpen(false);
+		}
+	};
+
+	useEffect(() => {
+		if (isAsideOpen) {
+			document.addEventListener('mousedown', handleClickOutside);
+		} else {
+			document.removeEventListener('mousedown', handleClickOutside);
+		}
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isAsideOpen]);
 
 	return (
 		<>
